@@ -32,5 +32,5 @@ AI포트폴리오를 참고하여 투자 가능
 
 ## 개발 환경
 Front
-<img stc="https://user-images.githubusercontent.com/97291618/215202493-eee7d790-ceaf-493b-a52b-4456d53c7752.jpg" width=100, height=30>
+<img stc="https://user-images.githubusercontent.com/97291618/215202493-eee7d790-ceaf-493b-a52b-4456d53c7752.jpg" width=300, height=100>
 
