@@ -31,7 +31,10 @@ AI포트폴리오를 참고하여 투자 가능
 타 사이틀보다 주식 입문자들을 위해 보기 쉽고 이용하기 간편하게 제작
 
 ## 개발 환경
-Front
-![123](https://user-images.githubusercontent.com/97291618/215203295-1948ca59-4ef2-47ba-b77f-11edf73ab0be.jpg)
+|분야|개발 환경|
+|---|---|
+|Front|![123](https://user-images.githubusercontent.com/97291618/215203295-1948ca59-4ef2-47ba-b77f-11edf73ab0be.jpg)|
+
+
 
 
