@@ -1,0 +1,119 @@
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <div class="chart-container">
+      <canvas id="rate_chart" style="position: relative; height:40vh; width:60vw"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var top_labels = {{ top_labels| safe }};
+  var top_values = {{ top_rates| safe }};
+  const ctx = document.getElementById('rate_chart');
+
+  const rate_plugin = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw: (chart, args, options) => {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = options.color || '#99ffff';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    },
+  }
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top_labels,
+      datasets: [{
+        label: '현재 수익률(%)',
+        data: top_values,
+        borderWidth: 1,
+        hoverOffset: 5,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ], 
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: {
+              size: 16,
+            }
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: {
+              size: 20,
+            }
+          }
+        },
+      },
+      plugins: {
+        legend: {
+          labels: {
+            display: false,
+            boxWidth: 0,
+            font: {
+              size: 16
+            }
+          },
+        },
+        customCanvasBackgroundColor: {
+          color: 'white'
+        },
+        labels: {
+          generateLabels: (chart) => {
+            return chart.data.labels.map(
+              (label, index) => ({
+                text: label,
+                strokeStyle: chart.data.datasets[0].borderColor[index],
+                fillStyle: chart.data.datasets[0].backgroundColor[index],
+                hidden: false,
+              })
+            )
+          }
+        }
+      },
+
+
+    },
+    plugins: [rate_plugin],
+  });
+
+
+</script>
+
+
+{% endblock content %}

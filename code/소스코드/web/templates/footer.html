@@ -1,0 +1,143 @@
+{% comment %} {% load static %}
+<footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="row">
+      <div class="col-12 col-md">
+        <img src="{% static 'image/rabbit.svg' %}" width="40" height="40" class="me-2" viewBox="0 0 118 94"><title>스토끼</title>
+        <small class="d-block mb-3 text-muted">&copy; 2022-2023</small>
+      </div>
+      <div class="col-6 col-md">
+        <h5>Features</h5>
+        <ul class="list-unstyled text-small">
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md">
+        <h5>About</h5>
+
+        <ul class="list-unstyled text-small">
+          <p class="mb-1" data-bs-toggle="collapse" href="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1">Team</p>
+          <div class="collapse" id="collapseExample1">
+            <div class="card card-body">AI 부산경남 8반 25조</div>
+          </div>
+        </ul>
+        <ul class="list-unstyled text-small">
+          <p class="mb-1" data-bs-toggle="collapse" href="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">Locations</p>
+          <div class="collapse" id="collapseExample2">
+            <div class="card card-body">부산시 ~</div>
+          </div>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer> {% endcomment %}
+
+{% comment %} {% load static %}
+<div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+</div>
+
+<div style="text-align:center">
+  <div style="font-size: 1rem;">
+    <span>
+      공지사항 
+    </span>
+    |
+    <span>
+      개인정보처리방침 
+    </span>
+    |
+    <span>
+      저작권정책 
+    </span>
+    |
+    <span>
+      담당자연락처
+    </span>
+  </div>
+  <div style="margin-top: 1rem;">
+    <img src="{% static 'image/rabbit.svg' %}" width="40" height="40" class="me-2" viewBox="0 0 118 94"> 
+
+    <h6 style="margin-right:0.5rem; font-family: 'SDSamliphopangche_Outline';">스토끼</h6> 
+  </div>
+</div> {% endcomment %}
+
+{% load static %}
+
+<head>
+<style>
+  .cl-effect-1 a::before,
+      .cl-effect-1 a::after {
+	    display: inline-block;
+      opacity: 0;
+      -webkit-transition: -webkit-transform 0.3s, opacity 0.2s;
+      -moz-transition: -moz-transform 0.3s, opacity 0.2s;
+      transition: transform 0.3s, opacity 0.2s;
+      }
+
+      .cl-effect-1 a::before {
+      margin-right: 10px;
+      content: '[';
+      -webkit-transform: translateX(20px);
+      -moz-transform: translateX(20px);
+      transform: translateX(20px);
+      }
+
+      .cl-effect-1 a::after {
+      margin-left: 10px;
+      content: ']';
+      -webkit-transform: translateX(-20px);
+      -moz-transform: translateX(-20px);
+      transform: translateX(-20px);
+      }
+
+      .cl-effect-1 a:hover::before,
+      .cl-effect-1 a:hover::after,
+      .cl-effect-1 a:focus::before,
+      .cl-effect-1 a:focus::after {
+      opacity: 1;
+      -webkit-transform: translateX(0px);
+      -moz-transform: translateX(0px);
+      transform: translateX(0px);
+      }
+</style>
+
+{% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> {% endcomment %}
+
+</head>
+
+<div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+</div>
+
+<div style="text-align:center">
+  <div class="cl-effect-1" style="font-size: 1rem;">
+    <span>
+      <a class="text-dark text-decoration-none" href='#'>공지사항</a>
+    </span>
+    |
+    <span>
+      <a class="text-dark text-decoration-none" href='#'>개인정보처리방침</a>
+    </span>
+    |
+    <span>
+      <a class="text-dark text-decoration-none" href='#'>저작권정책</a>
+    </span>
+    |
+    <span>
+      <a class="text-dark text-decoration-none" href='#'>담당자연락처</a>
+    </span>
+  </div>
+  <div style="margin-top: 1rem;">
+    <img src="{% static 'image/rabbit.svg' %}" width="40" height="40" class="me-2" viewBox="0 0 118 94"> 
+
+    <h6 style="margin-right:0.5rem; font-family: 'SDSamliphopangche_Outline';">스토끼</h6> 
+  </div>
+</div>
+
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> {% endcomment %}

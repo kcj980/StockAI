@@ -1,0 +1,21 @@
+{% load rest_framework %}
+
+{% block title %} 주가 목록 {% endblock %}
+    
+{% block content %}
+    <h1>주가 목록 보기</h1>
+    
+    {% for stock_data in stock_ranking_all %}
+        {{stock_data.stock_code}} {{stock_data.end_close}} {{stock_data.end_rate_change}}<br>
+    {% endfor %}
+
+    <p></p>
+
+    <form action="" method="get">
+        종목명 : <input type="text" name="stock_code" value="{{q|default:'A030200'}}" >
+        <input type="submit" value="검색">
+    </form>
+    {% for stock_data in stock_list_all %}
+        <a href="{{stock_data.id}}"> {{stock_data.end_close}}</a><br>
+    {% endfor %}
+{% endblock %}

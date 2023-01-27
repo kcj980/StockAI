@@ -1,0 +1,20 @@
+1. mysql_db_data 폴더 다운로드
+
+2. mysql에서 create database StockAI; 실행 
+
+3. 상단에서 Server - Data Import 클릭
+
+4. Import from Disk - Import Options - Import from Dump Project Folder 여기에 다운로드 받은 mysql_db_data폴더 경로 선택
+
+5. 선택하면 아래 Select Database Obgects to Import에서 stockai체크박스 선택
+
+6. 오른쪽 아래 start Import 클릭
+
+7. select * from StockData; 로 데이터 확인
+
+*추가 설정*
+select * from StockData; -> 기본값으론 1000행까지만 보여줌
+ -> 해제 방법 : 상단 Edit - Preferences - SQL Editor - SQL Execution - SELECT Query Results에서 Limit Rows체크 박스 해제
+
+기본키 값 UPDATE 막아둠
+-> 해제방법 : 상단 Edit - Preferences - SQL Editor 제일 아래 Safe Updates 체크 해제

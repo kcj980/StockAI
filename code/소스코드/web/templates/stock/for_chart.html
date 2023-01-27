@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+  var dataPoints1 = [], dataPoints2 = [], dataPoints3 = [];
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    theme: "light2",
+    exportEnabled: true,
+    title:{
+      text:"Bitcoin Price & Volume"
+    },
+    charts: [{
+      toolTip: {
+        shared: true
+      },
+      axisX: {
+        lineThickness: 5,
+        tickLength: 0,
+        labelFormatter: function(e) {
+          return "";
+        }
+      },
+      axisY: {
+        prefix: "$"
+      },
+      legend: {
+        verticalAlign: "top"
+      },
+      data: [{
+        showInLegend: true,
+        name: "Stock Price (in USD)",
+        yValueFormatString: "$#,###.##",
+        type: "candlestick",
+        dataPoints : dataPoints1
+      }]
+    },{
+      height: 100,
+      toolTip: {
+        shared: true
+      },
+      axisY: {
+        prefix: "$",
+        labelFormatter: addSymbols
+      },
+      legend: {
+        verticalAlign: "top"
+      },
+      data: [{
+        showInLegend: true,
+        name: "Volume (BTC/USD)",
+        yValueFormatString: "$#,###.##",
+        dataPoints : dataPoints2
+      }]
+    }],
+    navigator: {
+      data: [{
+        dataPoints: dataPoints3
+      }],
+      slider: {
+        minimum: new Date(2016, 01, 01),
+        maximum: new Date(2023, 02, 01)
+      }
+    }
+  });
+  $.getJSON("http://127.0.0.1:8000/stock/list/?format=json&search="+"{{q}}", function(data) {
+    for(var i = 0; i < data.results.length; i++){
+      dataPoints1.push({x: new Date(data.results[i].data_time), y: [Number(data.results[i].start_open), Number(data.results[i].high), Number(data.results[i].low), Number(data.results[i].end_close)]});;
+      dataPoints2.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].trading_volume)});
+      dataPoints3.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].end_close)});
+    }
+    stockChart.render();
+  });
+  function addSymbols(e){
+    var suffixes = ["", "K", "M", "B"];
+    var order = Math.max(Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)), 0);
+    if(order > suffixes.length - 1)
+      order = suffixes.length - 1;
+    var suffix = suffixes[order];
+    return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+  }
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 500px; width: 100%;"></div>
+</body>
+</html>

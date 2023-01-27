@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+{% load rest_framework %}
+
+{% block title %} 주가 목록 {% endblock %}
+    
+{% block content %}
+<head>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+  var dataPoints1 = [], dataPoints2 = [], dataPoints3 = [];
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    title: {
+      text: "BTC/USD"
+    },
+    charts: [{
+      axisY: {
+        prefix: "$",
+        title: "Price"
+      },
+      data: [{
+        type: "line",
+        yValueFormatString: "$#,###.##",
+        dataPoints : dataPoints1
+      }]
+    },{
+      height: "30%",
+      axisY: {
+        title: "Volume"
+      },
+      data: [{
+        dataPoints : dataPoints2
+      }]
+    }],
+    navigator: {
+      data: [{
+        dataPoints: dataPoints3
+      }],
+      slider: {
+        minimum: new Date(2016, 01, 01),
+        maximum: new Date(2023, 02, 01)
+      }
+    }
+  });
+  $.getJSON("http://127.0.0.1:8000/stock/list/?format=json&search="+"A097950", function(data) {
+    for(var i = 0; i < data.results.length; i++){
+      console.log('close' + data.results[i].end_close);
+      console.log('volume' + data.results[i].trading_volume);
+      dataPoints1.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].end_close)});
+      dataPoints2.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].trading_volume)});
+      dataPoints3.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].end_close)});
+    }
+    stockChart.render();
+  });
+}
+</script>
+</head>
+
+
+<body>
+
+    <h1>주가 목록 보기</h1>
+    
+    {% for stock_data in stock_ranking_all %}
+        {{stock_data.stock_code}} {{stock_data.end_close}} {{stock_data.end_rate_change}}<br>
+    {% endfor %}
+
+    <p></p>
+
+    <div id="chartContainer" style="height: 450px; width: 100%;"></div>
+
+    <form action="" method="get">
+        종목명 : <input type="text" name="stock_code" value="{{q|default:'A030200'}}" >
+        <input type="submit" value="검색">
+    </form>
+    {% for stock_data in stock_list_all %}
+        <a href="{{stock_data.id}}"> {{stock_data.end_close}}</a><br>
+    {% endfor %}
+{% endblock %}
+
+</body>
+</html>

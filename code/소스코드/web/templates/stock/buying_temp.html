@@ -1,0 +1,16 @@
+{% load rest_framework %}
+
+<form method="POST">
+    {% csrf_token %}
+    종목명
+    <input type="string" name="stock_name"><br>
+    개수
+    <input type="int" name="count"><br>
+    <button type="submit" class="btn btn-create">매수</button>
+</form>
+
+{% comment %} {{% for ifm in information_all %}
+
+    {{ifm.id}} {{ifm.data_time}} {{ifm.high}} {{ifm.volume}} <br>
+
+{% endfor %}} {% endcomment %}

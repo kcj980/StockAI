@@ -1,0 +1,11 @@
+
+{% block content %}
+
+{% load rest_framework %}
+<form method="post" action="{% url 'accounts:signup' %}">
+  {% csrf_token %}
+  {% render_form serializer %}
+  <button type="submit" class="btn btn-primary">계정 생성</button>
+      
+</form>
+{% endblock content %}

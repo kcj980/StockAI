@@ -1,0 +1,219 @@
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>스토끼</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+
+   
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Brush+Script&display=swap" rel="stylesheet">    
+
+<link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      @font-face {
+        font-family: 'KyoboHand';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: 'SDSamliphopangche_Outline';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      nav a:hover,
+      nav a:focus {
+        outline: none;
+      }
+
+      .cl-effect-1 a::before,
+      .cl-effect-1 a::after {
+	    display: inline-block;
+      opacity: 0;
+      -webkit-transition: -webkit-transform 0.3s, opacity 0.2s;
+      -moz-transition: -moz-transform 0.3s, opacity 0.2s;
+      transition: transform 0.3s, opacity 0.2s;
+      }
+
+      .cl-effect-1 a::before {
+      margin-right: 10px;
+      content: '[';
+      -webkit-transform: translateX(20px);
+      -moz-transform: translateX(20px);
+      transform: translateX(20px);
+      }
+
+      .cl-effect-1 a::after {
+      margin-left: 10px;
+      content: ']';
+      -webkit-transform: translateX(-20px);
+      -moz-transform: translateX(-20px);
+      transform: translateX(-20px);
+      }
+
+      .cl-effect-1 a:hover::before,
+      .cl-effect-1 a:hover::after,
+      .cl-effect-1 a:focus::before,
+      .cl-effect-1 a:focus::after {
+      opacity: 1;
+      -webkit-transform: translateX(0px);
+      -moz-transform: translateX(0px);
+      transform: translateX(0px);
+      }
+
+      .cl-effect-7 a {
+        padding: 12px 10px 10px;
+        color: #566473;
+        text-shadow: none;
+        font-weight: 700;
+      }
+      
+      .cl-effect-7 a::before,
+      .cl-effect-7 a::after {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #566473;
+        content: '';
+        -webkit-transition: -webkit-transform 0.3s;
+        -moz-transition: -moz-transform 0.3s;
+        transition: transform 0.3s;
+        -webkit-transform: scale(0.85);
+        -moz-transform: scale(0.85);
+        transform: scale(0.85);
+      }
+      
+      .cl-effect-7 a::after {
+        opacity: 0;
+        -webkit-transition: top 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+        -moz-transition: top 0.3s, opacity 0.3s, -moz-transform 0.3s;
+        transition: top 0.3s, opacity 0.3s, transform 0.3s;
+      }
+      
+      .cl-effect-7 a:hover::before,
+      .cl-effect-7 a:hover::after,
+      .cl-effect-7 a:focus::before,
+      .cl-effect-7 a:focus::after {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+      }
+      
+      .cl-effect-7 a:hover::after,
+      .cl-effect-7 a:focus::after {
+        top: 0%;
+        opacity: 1;
+      }
+      
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  </head>
+  <body>
+    
+
+<div class="container" style="padding-top:0rem;">
+  <header>
+    <div class="d-flex flex-column flex-md-row align-items-center mb-4 border-bottom">
+      <a href="{% url 'home' %}" class="d-flex align-items-center text-dark text-decoration-none">
+        <img src="{% static 'image/rabbit.svg' %}" width="40" height="40" class="me-2" viewBox="0 0 118 94"><title>스토끼</title>
+        <div style="margin-top:1rem; font-family: 'SDSamliphopangche_Outline';">
+        <span class="fs-4">
+          <h1>스토끼</h1>
+        </span>
+        </div>
+      </a>
+
+      <div class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+      <nav class="cl-effect-1">
+        <a class="me-3 py-2 text-dark text-decoration-none" style="margin-top:0.5rem;" href="http://127.0.0.1:8000/stock/"><strong>모의투자</strong></a>
+        <a class="me-3 py-2 text-dark text-decoration-none" style="margin-top:0.5rem;" href="{% url 'board:message-list' %}"><strong>게시판</strong></a>
+        <a class="me-3 py-2 text-dark text-decoration-none" style="margin-top:0.5rem;" href="http://127.0.0.1:8000/welcome/"><strong>소개</strong></a>
+      </nav>
+      </div>
+      <ul>
+        
+        
+      {% if user.is_authenticated %}
+        
+      <div class="btn-group" style="margin-top:1.5rem;">
+        <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="font-weight:bold;">
+        {{ user.user_name }}
+        </button>
+        <ul class="dropdown-menu">
+       
+          {% comment %} <li><div style="margin-left: 1rem;">{{ user.user_name }}</div></li> {% endcomment %}
+          <li><div style="margin-left: 1rem; margin-bottom: 1rem;"><strong> < 현재 자산 > </strong>{{ user.now_money }}</div></li>
+          <li><div style="margin-left: 1rem; margin-bottom: 1rem;"><strong> < 총 자산 > </strong>{{ user.total_money }}</div></li>
+
+          <li><hr class="dropdown-divider" style="margin-bottom: 1rem;"></li>
+          <li><a class="dropdown-item" href="{% url 'accounts:profile' %}" style="margin-bottom: 1rem;"><strong>정보수정</strong></a></li>
+          <li><a class="dropdown-item" href="http://127.0.0.1:8000/mypage/" style="margin-bottom: 0.5rem;"><strong>마이페이지</strong></a></li>
+        </ul>
+      </div>
+        <a class="btn btn-outline-success" style="margin-left:5px; margin-top:1.5rem; font-weight:bold;" href="{% url 'logout' %}">로그아웃</a>
+
+        {% endif %}
+
+        {% if not user.is_authenticated %}
+        <a class="btn btn-outline-success" style="font-weight:bold;" href="{% url 'login' %}">로그인</a>
+        <a class="btn btn-outline-success" style="font-weight:bold;" href="{% url 'accounts:signup' %}">회원가입</a>
+        {% endif %}
+      
+    </ul>
+    </div>
+  </header>
+  
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>

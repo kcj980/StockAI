@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+
+{% include 'header.html' %}
+
+{% block content %}
+<form method="post" >
+{% csrf_token %}
+<body class="bg-success bg-opacity-10">
+    <div class="board_wrap">
+        <div class="page-title">
+            <div class="container">
+                <h3>게시글 작성</h3>
+            </div>
+        </div>
+        <div class="board_write_wrap">
+            <div class="board_write">
+                <div class="title">
+                    <dl>
+                        <dt>제목</dt>
+                        {% comment %} <dd><input type="text" name="title" value="{{ message.title.value }}" style="background-color:#E7F2ED;" placeholder="제목 입력"></dd> {% endcomment %}
+                        <dd><input type="text" name="title" style="background-color:#E7F2ED;" value="{{ message.title }}"></dd>
+                    </dl>
+                </div>
+                <hr>
+                <div class="cont">
+                    {% comment %} <textarea name="content" value="{{ message.data.content.value |default_if_none:'' }}" style="background-color:#E7F2ED;" placeholder="내용 입력"></textarea> {% endcomment %}
+                    <textarea name="content" style="background-color:#E7F2ED;">{{ message.content }}</textarea>
+                </div>
+            </div>
+            <div class="bt_wrap">
+              <button type="submit" class="btn btn-outline-success">수정</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+</form>
+{% endblock %}
+{% include 'footer.html' %}

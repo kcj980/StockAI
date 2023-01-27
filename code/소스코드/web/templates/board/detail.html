@@ -1,0 +1,101 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+{% include "header.html" %}
+
+<style>
+  .form-group  > textarea {
+    width: 100%;
+    height: 2.5em;
+    resize: none;
+  }
+</style>
+
+{% block content %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글</title>
+    <link rel="stylesheet" href="css/css.css">
+</head>
+<body class="bg-success bg-opacity-10">
+    <div class="board_wrap">
+        <div class="board_view_wrap">
+            <div class="board_view">
+                <div class="title">
+                  {{ message.title }}
+                </div>
+                <div class="info">
+                    <dl>
+                        <dt>작성자</dt>
+                        <dd>{{ message.user }}</dd>
+                    </dl>
+                    <dl>
+                        <dt>작성일</dt>
+                        <dd>{{ message.created_at }}</dd>
+                    </dl>
+                </div>
+                <div class="cont">
+                  {{ message.content }}
+                </div>
+            </div>
+            <br>
+            <div>
+              <a class="btn btn-outline-success" href="{% url 'board:message-list' %}" class="on" style ="float:left; margin-left:0.5rem;">목록</a>
+              {% if request.user.userid == message.user %}
+              <a class="btn btn-outline-success" href="{% url 'board:message-update' pk=pk %}" style ="float:right;">수정</a>
+              <form action="{% url 'board:message-delete' pk=pk %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-success" class="on" style ="float:right;">삭제</button>
+              </form>
+              {% endif %}
+            </div>
+
+            <br><br><br><hr><br>
+            
+            <form method="post" action="{% url 'board:comments' pk=pk %}">
+            {% csrf_token %}
+            
+              <div class="form-group row">
+                {% if user.is_authenticated %}
+                <textarea class="form-control" name="content" rows="2" style="background-color:#E7F2ED;" placeholder="댓글을 입력해주세요."></textarea>
+              </div><br>
+                <input class="btn btn-outline-success" type="submit" style ="float:right;" value="댓글입력">
+                {% endif %}  
+                {% if not user.is_authenticated %}
+                <textarea class="form-control" name="content" rows="2" style="background-color:#E7F2ED;" placeholder="로그인 후 댓글 등록이 가능합니다."></textarea>
+                </div><br>
+                <a class="btn btn-outline-success" style="font-weight:bold; float:right;" href="{% url 'login' %}">로그인</a>
+                {% endif %}
+            </form>
+            <br><br>
+            <hr>
+           
+            {% if comments %}
+              {% for comment in comments %}
+              <div>
+                {% if request.user.userid == comment.user %}
+                  <form action="{% url 'board:comment-delete' message_id=comment.message pk=comment.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-success" class="on" style ="float:right; margin-left:0.5rem;">삭제</button>
+                  </form>
+                {% endif %}
+                <img class="mb-2" src="/static/image/user.png" alt="" width="20" height="20"><strong style="margin-left:0.5rem;">{{ comment.user }}</strong>
+                <p>{{ comment.content }}</p>
+
+              </div>
+              <hr>
+              {% endfor %}
+            {% else %}
+              <p>아직 댓글이 없습니다.</p>
+              <hr>
+            {% endif %}
+            
+        </div>
+    </div>
+</body>
+</html>
+
+
+{% endblock content %}

@@ -1,0 +1,37 @@
+<style>
+    .centered { display: table; margin-left: auto; margin-right: auto; }
+    .find-btn{
+        text-align: center;
+    }
+    .find-btn1{
+        display :inline-block;
+    }
+  </style>
+
+{% include "header.html" %}
+
+<body class="bg-success bg-opacity-10">
+
+{% block content %}
+<div class="container my-3" style="width:400px;">
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="username">아이디</label>
+            <input type="text" class="form-control" name="username" id="username"
+                   value="{{ form.userid.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="password">비밀번호</label>
+            <input type="password" class="form-control" name="password" id="password"
+                   value="{{ form.password.value|default_if_none:'' }}">
+        </div>
+        <br>
+        <div class="find-btn">
+            <button type="submit" class="btn btn-primary find-btn1">로그인</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+</body>

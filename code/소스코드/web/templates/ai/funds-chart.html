@@ -1,0 +1,181 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+
+{% block content %}
+<div class="card">
+
+  <div class="card-body">
+    <div class="chart-container">
+      <canvas id="funds_chart" style="position: relative; height:40vh; width:60vw"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  var curr_labels = {{ curr_labels| safe }};
+  var curr_values = {{ curr_values| safe }};
+  const ctx = document.getElementById('funds_chart');
+
+  const fund_plugin = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw: (chart, args, options) => {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = options.color || '#99ffff';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    },
+    beforeInit: function(chart, options) {
+      chart.legend.afterFit = function() {
+        this.width = this.width - 50;
+      };
+    },
+  }
+
+  const getOrCreateLegendList = (chart, id) => {
+    const legendContainer = document.getElementById(id);
+    let listContainer = legendContainer.querySelector('ul');
+
+    if (!listContainer) {
+      listContainer = document.createElement('ul');
+      listContainer.style.display = 'flex';
+      listContainer.style.flexDirection = 'row';
+      listContainer.style.margin = 0;
+      listContainer.style.padding = 0;
+
+      legendContainer.appendChild(listContainer);
+    }
+
+    return listContainer;
+  };
+
+  const htmlLegendPlugin = {
+    id: 'htmlLegend',
+    afterUpdate(chart, args, options) {
+      const ul = getOrCreateLegendList(chart, options.containerID);
+
+      // Remove old legend items
+      while (ul.firstChild) {
+        ul.firstChild.remove();
+      }
+
+      // Reuse the built-in legendItems generator
+      const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.style.alignItems = 'center';
+        li.style.cursor = 'pointer';
+        li.style.display = 'flex';
+        li.style.flexDirection = 'row';
+        li.style.marginLeft = '10px';
+
+        li.onclick = () => {
+          const { type } = chart.config;
+          if (type === 'pie' || type === 'doughnut') {
+            // Pie and doughnut charts only have a single dataset and visibility is per item
+            chart.toggleDataVisibility(item.index);
+          } else {
+            chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+          }
+          chart.update();
+        };
+
+        // Color box
+        const boxSpan = document.createElement('span');
+        boxSpan.style.background = item.fillStyle;
+        boxSpan.style.borderColor = item.strokeStyle;
+        boxSpan.style.borderWidth = item.lineWidth + 'px';
+        boxSpan.style.display = 'inline-block';
+        boxSpan.style.height = '20px';
+        boxSpan.style.marginRight = '10px';
+        boxSpan.style.width = '20px';
+
+        // Text
+        const textContainer = document.createElement('p');
+        textContainer.style.color = item.fontColor;
+        textContainer.style.margin = 0;
+        textContainer.style.padding = 0;
+        textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+
+        const text = document.createTextNode(item.text);
+        textContainer.appendChild(text);
+
+        li.appendChild(boxSpan);
+        li.appendChild(textContainer);
+        ul.appendChild(li);
+      });
+    }
+  };
+
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: curr_labels,
+      datasets: [{
+        label: '의 현재 가치',
+        data: curr_values,
+        borderWidth: 1,
+        hoverOffset: 5
+      }]
+    },
+    options: {
+
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          display: false,
+          grid: {
+
+            display: false
+          }
+        },
+        x: {
+          display: false,
+          grid: {
+
+            display: false
+          }
+        },
+
+
+      },
+
+      plugins: {
+        legend: {
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: "종목",
+            font: {
+              size: 16
+            }
+          },
+          maxWidth: 300,
+          maxHeight: 200,
+          labels: {
+
+            font: {
+              size: 16,
+            },
+            usePointStyle: true,
+            pointStyle: 'circle',
+
+          }
+        },
+        customCanvasBackgroundColor: {
+          color: 'white'
+        }
+      },
+
+    },
+    plugins: [fund_plugin],
+  });
+</script>
+{% endblock content %}

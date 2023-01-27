@@ -1,0 +1,29 @@
+{% include 'stock/buysell.html' %}
+{% load rest_framework %}
+
+<head>
+    <script>
+        function popupSubmit(){
+            opener.parent.location.reload();
+        }
+    </script>
+</head>
+
+<body class="bg-success bg-opacity-10">
+
+<div class="centered">
+    <div style="margin-top: 2rem;">
+
+<form method="POST">
+    {% csrf_token %}
+    <span><strong>종목명</strong></span><br>
+    <input type="string" name="stock_name"><br>
+    <span><strong>개수</strong></span><br>
+    <input type="int" name="count"><br><br>
+    <div class="find-btn">
+    <button type="submit" class="btn btn-primary find-btn1" onclick="popupSubmit()">매도</button>
+    </div>
+
+</form>
+</div>
+</body>

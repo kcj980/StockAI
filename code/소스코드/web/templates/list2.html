@@ -1,0 +1,115 @@
+{% include 'header2.html' %}
+<body class="bg-success bg-opacity-10">
+  {% comment %} 주가 목록 부분 {% endcomment %}
+<div class="col col-12">
+  <div class="col-lg-12 bg-success bg-opacity-5">
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+          <span> 
+            <div class="text-primary">나는 바보?</div>
+          </span>
+
+          <span class="small text-muted">기준일: 2022-12-14 
+            <span class="badge bg-success">실시간</span>
+          </span>
+      </div>
+      <div class="card-body">
+
+
+        {% load rest_framework %}
+
+        {% block title %} 주가 목록 {% endblock %}
+{% block content %}
+            <h1>주가 목록 보기</h1>
+
+            {% for stock_data in stock_ranking_all %}
+                {{stock_data.stock_code}} {{stock_data.end_close}} {{stock_data.end_rate_change}}<br>
+            {% endfor %}
+
+            <p></p>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">종목명</th>
+                  <th scope="col">종가</th>
+                  <th scope="col">등락률</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td colspan="2">Larry the Bird</td>
+                  <td>@twitter</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <form action="" method="get">
+                종목명 : <input type="text" name="stock_code" value="{{q|default:'A030200'}}" >
+                <input type="submit" value="검색">
+            </form>
+            {% for stock_data in stock_list_all %}
+                <a href="{{stock_data.id}}"> {{stock_data.end_close}}</a><br>
+            {% endfor %}
+        {% endblock %}
+      </div>
+
+  </div>
+
+  </div>
+</div>
+
+{% comment %} 그래프 삽입 부분 {% endcomment %}
+<div style="margin-top: 2rem;">
+
+<div class="col col-12">
+  <div class="col-lg-12 bg-success bg-opacity-5">
+    <div class="card mb-4">
+        <div class="card-header">
+          <span> 
+            <div class="text-primary">그래프 들어갈 자리</div>
+          </span>
+        </div>
+        <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+        <div class="card-footer small text-muted">필요하면 이 부분도 쓰세요</div>
+        
+    </div>
+</div>
+
+</div>
+</div>
+
+{% comment %}  표 넣을 부분? {% endcomment %}
+<div style="margin-top: 2rem;">
+
+  <div class="col col-12">
+    <div class="col-lg-12 bg-success bg-opacity-5">
+      <div class="card mb-4">
+          <div class="card-header">
+            <span> 
+              <div class="text-primary">표 넣을 부분</div>
+            </span>
+          </div>
+          <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+          
+      </div>
+  </div>
+  
+  </div>
+  </div>
+</body>
+{% include 'footer2.html' %}

@@ -1,0 +1,265 @@
+{% include 'header.html' %}
+<body class="bg-success bg-opacity-10">
+  <main>
+    <div class="row wider justify-content-around">
+      <div class="col col-6 app-content">
+      <!-- stock ranking -->
+      <div class="col-lg-12 bg-success bg-opacity-5">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-1"></i>
+                Pie Chart
+            </div>
+            <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            
+        </div>
+    </div>
+    
+      </div>
+      <script src="assets/demo/chart-pie-demo.js"></script>
+
+      
+        <div class="col col-6 app">
+          <div class="col-lg-12 bg-success bg-opacity-5">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+              <span> 
+                  <a href="{% url 'list' %}">주가 목록</a>
+              </span>
+    
+              <span class="small text-muted">기준일: 2022-12-14 
+                <span class="badge bg-success">실시간</span>
+              </span>
+          </div>
+          <div class="card-body">
+    
+    
+            {% load rest_framework %}
+    
+            {% block title %} 주가 목록 {% endblock %}
+    {% block content %}
+                <h1>주가 목록 보기</h1>
+    
+                {% for stock_data in stock_ranking_all %}
+                    {{stock_data.stock_code}} {{stock_data.end_close}} {{stock_data.end_rate_change}}<br>
+                {% endfor %}
+    
+                <p></p>
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">종목명</th>
+                      <th scope="col">종가</th>
+                      <th scope="col">등락률</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Jacob</td>
+                      <td>Thornton</td>
+                      <td>@fat</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>@twitter</td>
+                    </tr>
+                  </tbody>
+                </table>
+    
+                <form action="" method="get">
+                    종목명 : <input type="text" name="stock_code" value="{{q|default:'A030200'}}" >
+                    <input type="submit" value="검색">
+                </form>
+                {% for stock_data in stock_list_all %}
+                    <a href="{{stock_data.id}}"> {{stock_data.end_close}}</a><br>
+                {% endfor %}
+            {% endblock %}
+          </div>
+    
+      </div>
+    
+      </div>
+    </div>
+    
+    </div>
+  
+  
+    {% comment %} <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Free</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>10 users included</li>
+              <li>2 GB of storage</li>
+              <li>Email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Pro</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$15<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>20 users included</li>
+              <li>10 GB of storage</li>
+              <li>Priority email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Enterprise</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$29<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>30 users included</li>
+              <li>15 GB of storage</li>
+              <li>Phone and email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="display-6 text-center mb-4">Compare plans</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <th style="width: 22%;">Free</th>
+            <th style="width: 22%;">Pro</th>
+            <th style="width: 22%;">Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">Public</th>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Private</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+        </tbody>
+
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">Permissions</th>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Sharing</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Unlimited members</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">Extra security</th>
+            <td></td>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+    </div> {% endcomment %}
+    <div style="margin-top: 2rem;">
+
+    <div class="row wider justify-content-around">
+
+      <div class="col col-4 app-content">
+        <div class="col-lg-12 bg-success bg-opacity-5">
+
+      <!-- stock ranking -->
+      
+        <div class="card">
+          <div class="card-body">
+            <form action="" method="get">
+            코스피 들어갈 자리 
+            </form>
+
+          </div>
+        </div>
+      </div>
+      </div>
+    
+      <div class="col col-4 app-content">
+        <div class="col-lg-12 bg-success bg-opacity-5">
+
+        <div class="card">
+          <div class="card-body">
+            <form action="" method="get">
+              모의투자 랭킹 들어갈 자리 
+              </form>
+
+            </div>
+          </div>
+        </div>
+        </div>
+    
+    {% comment %}  {% endcomment %}
+          {% comment %} <div class="row wider justify-content-around"> {% endcomment %}
+    
+        <div class="col col-4 app-content">
+          <div class="col-lg-12 bg-success bg-opacity-5">
+
+    
+        <!-- stock ranking -->
+          <div class="card">
+    
+            <div class="card-body">
+              <form action="" method="get">
+              주식용어 들어갈 자리 
+              </form>
+
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+
+  {% include 'footer.html' %}

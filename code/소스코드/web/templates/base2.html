@@ -1,0 +1,371 @@
+{% include 'header.html' %}
+
+{% load rest_framework %}
+    
+{% block content %}
+
+<head>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+  <script type="text/javascript">
+  window.onload = function () {
+    var dataPoints = [];
+    var dataPoints2 = [];
+    var dataPoints3 = [];
+    var stockChart = new CanvasJS.StockChart("stockChartContainer", {
+      exportEnabled: false,
+      title: {
+        text:"KOSPI"
+      },
+      rangeSelector : {
+        enabled : false
+      },
+      charts: [{
+        height : 200,
+        axisX: {
+          crosshair: {
+            enabled: true,
+            snapToDataPoint: true,
+            valueFormatString: "MMM YYYY"
+          }
+        },
+        axisY: {
+          prefix: "￦",
+          // suffix: "M",
+          crosshair: {
+            enabled: true,
+            snapToDataPoint: true,
+            valueFormatString: "$#,###.00",
+          }
+        },
+        data: [{
+          type: "line",
+          xValueFormatString: "MMM YYYY",
+          yValueFormatString: "$#,###.##",
+          color: "#2E8B57",
+          dataPoints : dataPoints
+        }]
+      }],
+      navigator: {
+        height : 50,
+        slider: {
+          minimum: new Date(2016, 01, 01),
+          maximum: new Date(2023, 06, 01)
+        }
+      }
+    });
+    var stockChart2 = new CanvasJS.StockChart("stockChartwithAI", {
+      exportEnabled: false,
+      title: {
+        text:"AI earnings rate"
+      },
+      rangeSelector : {
+        enabled : false
+      },
+      charts: [{
+        height : 200,
+        axisX: {
+          crosshair: {
+            enabled: true,
+            snapToDataPoint: true,
+            valueFormatString: "MMM YYYY"
+          }
+        },
+        axisY: {
+          prefix: "￦",
+          // suffix: "M",
+          crosshair: {
+            enabled: true,
+            snapToDataPoint: true,
+            valueFormatString: "$#,###.00",
+          }
+        },
+        data: [{
+          type: "line",
+          name: "KOSPI",
+          showInLegend: true,
+          xValueFormatString: "MMM YYYY",
+          yValueFormatString: "$#,###.##",
+          color: '#4444EE',
+          dataPoints : dataPoints2
+        },
+        {
+          type: "line",
+          name: "AI 수익률",
+          showInLegend: true,
+          xValueFormatString: "MMM YYYY",
+          yValueFormatString: "$#,###.##",
+          color: '#EE4444',
+          dataPoints : dataPoints3
+        }]
+      }],
+      navigator: {
+        enabled : false
+      }
+    });
+    $.getJSON("http://127.0.0.1:8000/macro/api/?format=json", function(data) {
+      for(var i = 0; i < data.results.length; i++){
+        dataPoints.push({x: new Date(data.results[i].date_time), y: Number(data.results[i].kospi)});
+      }
+      stockChart.render();
+    });
+    $.getJSON("http://127.0.0.1:8000/ai/api/?format=json", function(data) {
+      for(var i = 0; i < data.ai_profit_json.length; i++){
+        dataPoints2.push({x: new Date(data.ai_profit_json[i].date_time), y: Number(data.ai_profit_json[i].kospi)});
+        dataPoints3.push({x: new Date(data.ai_profit_json[i].date_time), y: Number(data.ai_profit_json[i].ai_profit)});
+      }
+      stockChart2.render();
+    });
+    var now_profit = document.getElementsByClassName('now_profit');
+    for (var i = 0; i < now_profit.length; i++){
+      if (parseInt(now_profit[i].innerText) > 0){
+        now_profit[i].style.color = '#ff0000';
+      }
+      else if (parseInt(now_profit[i].innerText) < 0){
+        now_profit[i].style.color = '#0000ff';
+      }
+      else{
+        now_profit[i].style.color = '#000000';
+      }
+    }
+  }
+  </script>
+  <style>
+    a {
+      text-decoration-line: none;
+    /*   text-decoration-line: underline; */
+    /*   text-decoration-line: overline; */
+    /*   text-decoration-line: line-through; */
+    /*   text-decoration-line: underline line-through overline; */
+    }
+
+    .link-success {
+      font-size: 1.3rem;
+    }
+  </style>
+</head>
+
+
+
+<body class="bg-success bg-opacity-10">
+  <main>
+    <div class="row wider justify-content-around">
+      <div class="col col-6 app-content">
+    
+      <!-- 주가예측 AI 관련 -->
+      <div class="col-lg-12 bg-success bg-opacity-5">
+        <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-pie me-1 text-success"></i>
+              <span> 
+                <!-- <a href="http://127.0.0.1:8000/ai/" class="link-success" style="font-family: 'KyoboHand';"><strong>StockAI</strong></a> -->
+                <a href="http://127.0.0.1:8000/ai/" class="link-success" style="font-family: 'KyoboHand';">
+                  <img class="mb-2" src="/static/image/carrot.png" alt="" width="25" height="25" style="margin-right:5px;"><strong>StockAI</strong>
+                </a>
+              </span>
+                
+            </div>
+            <div class="card-body">
+              <!--<canvas id="myPieChart" width="100%" height="50"></canvas>-->
+              <div id="stockChartwithAI" style="height: 240px; max-width: 920px; margin: 0px auto;"></div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            
+        </div>
+    </div>
+    
+      </div>
+      <script src="assets/demo/chart-pie-demo.js"></script>
+
+      <!-- 주가 현황 및 차트 + 모의투자 -->
+        <div class="col col-6 app">
+          <div class="col-lg-12 bg-success bg-opacity-5">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between">
+              <span> 
+                <img class="mb-2" src="/static/image/carrot.png" alt="" width="25" height="25" style="margin-right:5px;">
+                <a href="http://127.0.0.1:8000/stock/" class="link-success" style="font-family: 'KyoboHand';">주식 현황 + 모의 투자</a>
+              </span>
+    
+              <span class="small text-muted">기준일: {{last_time}}
+                <span class="badge bg-success">실시간</span>
+              </span>
+          </div>
+          <div class="card-body" style="height: 310px;">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope='col'> 순위 </th>
+                      <th scope='col'> 종목명 </th>
+                      <th scope='col'> AI Score </th>
+                    </tr>
+                  </thead>
+                  {% for stock_data in stock_ranking_all %}
+                    <thead>
+                      <tr>
+                        <th scope='row'> {{forloop.counter}} </th>
+                        <td> {{stock_data.stock_name}} </td>
+                        <td> {{stock_data.total_score}} </td>
+                      </tr>
+                    </thead>
+                  {% endfor %}
+                </table>
+          </div>
+    
+      </div>
+    
+      </div>
+    </div>
+    
+    </div>
+  
+  
+    
+    <div style="margin-top: 0.5rem;">
+
+    <div class="row wider justify-content-around">
+
+      <div class="col col-4 app-content">
+        <div class="col-lg-12 bg-success bg-opacity-5">
+
+      
+      <!-- 거시 지표 -->
+      <div class="card">
+        <div class="card-header">
+          <span> 
+            <img class="mb-2" src="/static/image/carrot.png" alt="" width="25" height="25" style="margin-right:5px;">
+            <a href="http://127.0.0.1:8000/macro/" class="link-success" style="font-family: 'KyoboHand';">거시지표</a>
+          </span>
+        </div>
+        <!-- 코스피, 코스닥 그래프 -->
+        <div class="card-body">
+          <div id="stockChartContainer" style="height: 300px; max-width: 920px; margin: 0px auto;"></div>
+        </div>
+      </div>
+      </div>
+      </div>
+
+
+
+      <!-- stock ranking -->
+      <div class="col col-4 app-content">
+        <div class="col-lg-12 bg-success bg-opacity-5">
+
+        <div class="card">
+          <div class="card-header">
+            <span> 
+              <img class="mb-2" src="/static/image/carrot.png" alt="" width="25" height="25" style="margin-right:5px;">
+              <a href="http://127.0.0.1:8000/ranking/" class="link-success" style="font-family: 'KyoboHand';">모의투자 랭킹</a>
+            </span>
+          </div>
+          <div class="card-body">
+            <table class="table" style="table-layout:fixed">
+            {% comment %} <table class="table"> {% endcomment %}
+              <thead class="table-light">
+                  <tr>
+                      <th scope='col'> 순위 </th>
+                      <th scope='col'> 닉네임 </th>
+                      <th scope='col'> 현재 수익률 </th>
+                  </tr>
+              </thead>
+              <tbody> 
+                  {% for ranking in user_ranking_all %}
+                      <tr>
+                          <th scope="row"> {{forloop.counter}} </th>
+                          <td width="100" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"> {{ranking.user_name}} </td>
+                          {% comment %} <td width="100" style="word-break:break-all"> {{ranking.user_name}} </td> {% endcomment %}
+                          <td class='now_profit'> {{ranking.current_return}} % </td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+        </div>
+      </div>
+
+
+    {% comment %}  {% endcomment %}
+          {% comment %} <div class="row wider justify-content-around"> {% endcomment %}
+    
+        <div class="col col-4 app-content">
+          <div class="col-lg-12 bg-success bg-opacity-5">
+
+    
+        <!-- 용어사전 -->
+        <div class="card">
+          <div class="card-header">
+            <span> 
+              <img class="mb-2" src="/static/image/carrot.png" alt="" width="25" height="25" style="margin-right:5px;">
+              <a href="http://127.0.0.1:8000/dict/" class="link-success" style="font-family: 'KyoboHand';">주식용어</a>
+            </span>
+        </div>
+          <div class="card-body">
+            <div id="container">         
+              <div id="content">     
+                  <ul class="content_list">
+                    <div class="info_area">
+                      <div class="subject">
+                        <div class="v150_87" style="margin-top:-3px;"></div>
+                        <a style="font-weight: bold;">매도</a>
+                      </div>
+                      <p style="margin-top:7px; margin-left:-10px;">
+                        가지고 있는 주식을 파는 것을 말합니다.
+                      </p>
+                      <div class="subject">
+                        <div class="v150_87" style="margin-top:-3px;"></div>
+                        <a style="font-weight: bold;">매수</a>
+                      </div>
+                      <p style="margin-top:7px; margin-left:-10px;">
+                        주식을 사는 것을 말합니다.
+                      </p>
+                      <div class="subject">
+                        <div class="v150_87" style="margin-top:-3px;"></div>
+                        <a style="font-weight:bold; margin-left:-8px;">상한가</a>
+                      </div>
+                      <p style="margin-top:7px; margin-left:-10px; margin-right:15px;">
+                          주가 일 최대 상승폭 30%인데 이 가격을 상한가라 합니다.
+                      </p>
+                      <div class="subject">
+                        <div class="v150_87" style="margin-top:-3px;"></div>
+                        <a style="font-weight: bold;">공시</a>
+                      </div>
+                      <p style="margin-top:7px; margin-left:-10px; margin-left:-10px; margin-right:15px;">
+                        사업내용이나 재무상황, 영업실적 등 기업의 내용을 투자자 등 이해관계자에게 알리는 제도입니다.
+                      </p>
+
+                    <style>* {
+                      box-sizing: border-box;
+                    }
+                     .v150_87 {
+                      width: 70px;
+                      height: 32px;
+                      background: rgba(20,133,62,0.6299999952316284);
+                      opacity: 0.7;
+                      position: absolute;
+                      
+                      left: 30px;
+                      border-top-left-radius: 30px;
+                      border-top-right-radius: 30px;
+                      border-bottom-left-radius: 30px;
+                      border-bottom-right-radius: 30px;
+                      overflow: hidden;
+                    }
+                    </style>
+                  </ul>
+              </div>
+          </div>
+          </div>
+        </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+{% endblock %}
+
+{% include 'footer.html' %}

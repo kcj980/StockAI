@@ -1,0 +1,425 @@
+{% include 'header.html' %}
+
+{% load rest_framework %}
+    
+{% block content %}
+
+
+
+<head>
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+      var dataPoints1 = [], dataPoints2 = [], dataPoints3 = [];
+      var stockChart = new CanvasJS.StockChart("chartContainer",{
+        theme: "light2",
+        exportEnabled: false,
+        /* title:{
+          text:"{{q_name|default:'KT'}}"
+        }, */
+        charts: [{
+          toolTip: {
+            shared: true
+          },
+          axisX: {
+            lineThickness: 5,
+            tickLength: 0,
+            labelFormatter: function(e) {
+              return "";
+            }
+          },
+          axisY: {
+            prefix: "￦"
+          },
+          legend: {
+            verticalAlign: "top"
+          },
+          data: [{
+            showInLegend: true,
+            name: "Stock Price (in KRW, ￦)",
+            yValueFormatString: "￦#,###.##",
+            type: "candlestick",
+            color: "#F07070",
+            dataPoints : dataPoints1
+          }]
+        },{
+          height: 80,
+          toolTip: {
+            shared: true
+          },
+          axisY: {
+            labelFormatter: addSymbols
+          },
+          legend: {
+            verticalAlign: "top"
+          },
+          data: [{
+            showInLegend: true,
+            name: "trading volume",
+            yValueFormatString: "##,###.##",
+            color: "#D06060",
+            dataPoints : dataPoints2
+          }]
+        }],
+        navigator: {
+          data: [{
+            color: "#90C040",
+            dataPoints: dataPoints3
+          }],
+          slider: {
+            minimum: new Date(2016, 01, 01),
+            maximum: new Date(2023, 06, 01)
+          }
+        }
+      });
+
+      $.getJSON("http://127.0.0.1:8000/stock/list/?format=json&search="+"{{q|default:'A030200'}}", function(data) {
+        for(var i = 0; i < data.results.length; i++){
+          dataPoints1.push({x: new Date(data.results[i].data_time), y: [Number(data.results[i].start_open), Number(data.results[i].high), Number(data.results[i].low), Number(data.results[i].end_close)]});;
+          dataPoints2.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].trading_volume)});
+          dataPoints3.push({x: new Date(data.results[i].data_time), y: Number(data.results[i].end_close)});
+        }
+        stockChart.render();
+      });
+
+      function addSymbols(e){
+        var suffixes = ["", "K", "M", "B"];
+        var order = Math.max(Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)), 0);
+        if(order > suffixes.length - 1)
+          order = suffixes.length - 1;
+        var suffix = suffixes[order];
+        return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+      }
+
+      var profits = document.getElementsByClassName('col_profit');
+      for (var i = 0; i < profits.length; i++){
+        if (parseInt(profits[i].innerText) > 0){
+          profits[i].style.color = '#ff0000';
+        }
+        else if (parseInt(profits[i].innerText) < 0){
+          profits[i].style.color = '#0000ff';
+        }
+        else{
+          profits[i].style.color = '#000000';
+        }
+      }
+
+      var short_suggest = document.getElementById('short_suggest');
+      var long_suggest = document.getElementById('long_suggest');
+      if (short_suggest.innerText == '매수 추천'){
+        short_suggest.style.color = '#ff0000';
+      }
+      else if (short_suggest.innerText == '매도 추천'){
+        short_suggest.style.color = '#0000ff';
+      }
+      else{
+        short_suggest.style.color = '#000000';
+      }
+      if (long_suggest.innerText == '매수 추천'){
+        long_suggest.style.color = '#ff0000';
+      }
+      else if (long_suggest.innerText == '매도 추천'){
+        long_suggest.style.color = '#0000ff';
+      }
+      else{
+        long_suggest.style.color = '#000000';
+      }
+
+    };
+  function popup_buy(){
+    var url = "http://127.0.0.1:8000/stock/userstock/buy/";
+    var name = "buying";
+    var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+    window.open(url, name, option);
+  };
+  function popup_sell(){
+    var url = "http://127.0.0.1:8000/stock/userstock/sell/";
+    var name = "selling";
+    var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+    window.open(url, name, option);
+  };
+  /* function coloring(){
+    var profit = document.getElementById('col_profit');
+    if (profit.innerText == '0'){
+      profit.style.color = '#ff0000';
+    }
+  }; */
+</script>
+<style>
+  a {
+    text-decoration-line: none;
+  /*   text-decoration-line: underline; */
+  /*   text-decoration-line: overline; */
+  /*   text-decoration-line: line-through; */
+  /*   text-decoration-line: underline line-through overline; */
+  }
+
+  .text-success {
+    font-size: 1.3rem;
+  }
+
+  .inline-block {
+    display: inline;
+  }
+
+  .nav-li {
+    display: inline;
+    font-size: 20px;
+    padding: 20px;
+  }
+</style>
+</head>
+
+
+
+<body class="bg-success bg-opacity-10">
+
+<!-- 1. 등락률 높은 종목 조회 (랭킹)  -->
+<div class="row wider justify-content-around">
+
+<div class="col col-6">
+  <div class="col-lg-12 bg-success bg-opacity-5">
+    <div class="card mb-4">
+      <!-- 1) 카드 머리  -->
+      <div class="card-header d-flex justify-content-between">
+        <span> 
+          <div class="text-success" style="font-family: 'KyoboHand';"><strong>급등 종목</strong></div>
+        </span>
+        <span class="small text-muted">기준일: {{last_time}}
+          <span class="badge bg-success">실시간</span>
+        </span>
+      </div>
+      <!-- 2) 카드 몸통  -->
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th scope='col'> 순위 </th>
+              <th scope='col'> 종목명 </th>
+              <th scope='col'> 현재 주가 </th>
+              <th scope='col'> 등락률 </th>
+            </tr>
+          </thead>
+          {% for stock_data in stock_ranking_all %}
+            <tbody>
+              <tr>
+                <th scope='row'> {{forloop.counter}} </th>
+                <td> {{stock_data.stock_name}} </td>
+                <td> {{stock_data.end_close}} </td>
+                <td> {{stock_data.end_rate_change}} </td>
+              </tr>
+            </tbody>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- 2. AI 추천 종목  -->
+<div class="col col-6">
+  <div class="col-lg-12 bg-success bg-opacity-5">
+    <div class="card mb-4">
+      <!-- 1) 카드 머리  -->
+      <div class="card-header d-flex justify-content-between">
+        <span> 
+          <div class="text-success" style="font-family: 'KyoboHand';"><strong>AI 추천 종목</strong></div>
+        </span>
+        <span class="small text-muted">기준일: {{last_time}} 
+          <span class="badge bg-success">실시간</span>
+        </span>
+      </div>
+      <!-- 2) 카드 몸통  -->
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th scope='col'> 순위 </th>
+              <th scope='col'> 종목명 </th>
+              <th scope='col'> AI Score </th>
+            </tr>
+          </thead>
+          {% for ai_dict in ai_dict_list %}
+            <tbody>
+              <tr>
+                <th scope='row'> {{forloop.counter}} </th>
+                <td> {{ai_dict.stock_name}} </td>
+                <td> {{ai_dict.total_score}} </td>
+              </tr>
+            </tbody>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- 3. 종목 검색 및 주식 차트(그래프)  -->
+<div style="margin-top: 2rem;">
+  <div class="col col-12">
+    <div class="col-lg-12 bg-success bg-opacity-5">
+      <div class="card mb-4">
+        <!-- 1) 카드 머리  -->
+        <div class="card-header">
+          <span> 
+            <div class="text-success" style="font-family: 'KyoboHand';"><strong>주식 차트</strong></div>
+          </span>
+        </div>
+        <!-- 2) 카드 몸통  -->
+        <div class="card-body">
+          <form action="" method="get">
+
+            {% comment %} <div style="margin-top:0.5rem; margin-left:0.5rem; font-family: 'KyoboHand'; font-size: 1.25rem;">
+              종목명 : <input type="text" name="stock_name" value="{{q_name|default:'KT'}}" style="font-family: 'KyoboHand';" >
+              <input type="submit" value="검색">
+              <span style="font-family: 'SDSamliphopangche_Outline'; font-size: 2rem; margin-left: 15rem; margin-right: 2rem;"><strong>AI 예측 결과</strong></span>
+              <ul class="list-group-flush">
+                <li class="list-group-item"><span style="font-family: 'KyoboHand'; font-size: 1.5rem; margin-right: 2rem;">단기 : {{short_suggest}} </span></li>
+                <li class="list-group-item"><span style="font-family: 'KyoboHand'; font-size: 1.5rem;">장기 : {{long_suggest}} </span></li>
+              </ul>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom" style="margin-top:0.5rem;">
+            </div>
+            <div style="font-family: 'SDSamliphopangche_Outline'; font-size: 2rem; text-align: center;"><strong>" {{q_name|default:'KT'}} "</strong></div> {% endcomment %}
+            
+            <div style="margin-top:0.5rem; font-family: 'KyoboHand'; font-size: 1.25rem;">
+              <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                
+                <span style="font-family: 'SDSamliphopangche_Outline'; font-size: 2rem; margin-left: 1.5rem; margin-right: 1.5rem;"><strong> AI 예측 결과 </strong></span>
+                <ul class="list-group-flush" style="padding-left:0rem;">
+                  <li class="list-group-item"><span style="font-family: 'KyoboHand'; font-size: 1.5rem;"><strong> - 단기적 투자 : <span id="short_suggest" style="font-family: 'SDSamliphopangche_Outline';"> {{short_suggest}} </span> </strong></span></li>
+                  <li class="list-group-item"><span style="font-family: 'KyoboHand'; font-size: 1.5rem;"><strong> - 장기적 투자 : <span id="long_suggest" style="font-family: 'SDSamliphopangche_Outline';"> {{long_suggest}} </span> </strong></span></li>
+                </ul>
+
+                <span style="margin-left: 30rem;"> 종목명 : </span>
+                <input type="text" name="stock_name" value="{{q_name|default:'KT'}}" style="font-family: 'KyoboHand'; margin-left:0.5rem;">
+                <input type="submit" value="검색">
+
+              </div>
+            </div>
+            <div style="font-family: 'KyoboHand'; font-size: 2rem; text-align: center;"><strong>" {{q_name|default:'KT'}} "</strong></div>
+
+          </form>
+          <p></p>
+          <!-- 2-1) 차트(그래프)  -->
+          <div id="chartContainer" style="height: 500px; width: 100%; padding-top:0.5rem;"></div>
+          <p></p>
+          <!-- 2-2) 종목 상세  -->
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th scope='col'> 날짜 </th>
+                <th scope='col'> 종가 </th>
+                <th scope='col'> 거래량 </th>
+                <th scope='col'> 거래대금 </th>
+                <th scope='col'> 등락률 </th>
+                <th scope='col'> 기관합 </th>
+                <th scope='col'> 기타법인 </th>
+                <th scope='col'> 개인 </th>
+                <th scope='col'> 외국인합 </th>
+                <th scope='col'> 공매도 </th>
+                <th scope='col'> 매수 </th>
+                <th scope='col'> 비중 </th>
+              </tr>
+            </thead>
+            {% for stock_data in stock_list_all %}
+              <tbody>
+                <tr>
+                  <td> {{stock_data.data_time}} </td>
+                  <td> {{stock_data.end_close}} </td>
+                  <td> {{stock_data.trading_volume}} </td>
+                  <td> {{stock_data.transaction_amount}} </td>
+                  <td> {{stock_data.end_rate_change}} </td>
+                  <td> {{stock_data.institutional_total}} </td>
+                  <td> {{stock_data.other_corporations}} </td>
+                  <td> {{stock_data.individual}} </td>
+                  <td> {{stock_data.foreigner_total}} </td>
+                  <td> {{stock_data.short_selling}} </td>
+                  <td> {{stock_data.short_buying}} </td>
+                  <td> {{stock_data.short_importance}} </td>
+                </tr>
+              </tbody>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>
+
+<!-- 4. 모의투자  -->
+<div style="margin-top: 2rem;">
+  <div class="col col-12">
+    <div class="col-lg-12 bg-success bg-opacity-5">
+      <div class="card mb-4">
+        <!-- 1) 카드 머리  -->
+        <div class="card-header d-flex justify-content-between">
+          <span> 
+            <div class="text-success" style="font-family: 'KyoboHand';"><strong>모의 투자</strong></div>
+          </span>
+          <span>
+            <a href="javascript:popup_buy()" class="link-danger" style="font-family: 'SDSamliphopangche_Outline'; margin-right:1rem; font-size: 1.3rem;"><strong>매수</strong></a>
+            <a href="javascript:popup_sell()" style="font-family: 'SDSamliphopangche_Outline'; font-size: 1.3rem; margin-right:1rem;"><strong>매도</strong></a>
+          </span>
+        </div>
+        <!-- 2) 카드 몸통  -->
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th scope='col'> 닉네임 </th>
+                <th scope='col'> 남은 자금 </th>
+                <th scope='col'> 주식 가치 </th>
+                <th scope='col'> 총 자산 </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> {{userstock_sub.user_name}} </td>
+                <td> {{userstock_sub.now_money}} </td>
+                <td> {{userstock_sub.invest_value}} </td>
+                <td> {{userstock_sub.total_money}} </td>
+              </tr>
+            </tbody>
+          </table>
+          <p></p>
+          <p></p>
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th scope='col'> 종목명 </th>
+                <th scope='col'> 개수 </th>
+                <th scope='col'> 평균 단가 </th>
+                <th scope='col'> 현재 주가 </th>
+                <th scope='col'> 현재 손익 </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for userstock in userstock_all %}
+                <tr>
+                  <td> {{userstock.stock_name}} </td>
+                  <td> {{userstock.count}} </td>
+                  <td> {{userstock.stock_mean_price}} </td>
+                  <td> {{userstock.stock_value}} </td>
+                  <td class='col_profit'> {{userstock.profit}} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+</body>
+
+{% include 'footer.html' %}

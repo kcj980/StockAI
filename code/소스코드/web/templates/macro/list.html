@@ -1,0 +1,133 @@
+{% include 'header.html' %}
+
+{% load rest_framework %}
+
+{% block content %}
+
+
+<head>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+    <script type="text/javascript">
+    window.onload = function () {
+      var dataPoints = [];
+      var stockChart = new CanvasJS.StockChart("stockChartContainer", {
+        exportEnabled: false,
+        /* title: {
+          text:"{{title|default:'KOSPI'}}"
+        }, */
+        rangeSelector : {
+          enabled : true
+        },
+        charts: [{
+          height : 300,
+          axisX: {
+            crosshair: {
+              enabled: true,
+              snapToDataPoint: true,
+              valueFormatString: "MMM YYYY"
+            }
+          },
+          axisY: {
+            prefix: "",
+            // suffix: "M",
+            crosshair: {
+              enabled: true,
+              snapToDataPoint: true,
+              valueFormatString: "#,###.00",
+            }
+          },
+          data: [{
+            type: "line",
+            xValueFormatString: "MMM YYYY",
+            yValueFormatString: "#,###.##",
+            color: "{{color|default:'#008080'}}",
+            dataPoints : dataPoints
+          }]
+        }],
+        navigator: {
+          slider: {
+            minimum: new Date(2016, 01, 01),
+            maximum: new Date(2023, 06, 01)
+          }
+        }
+      });
+      $.getJSON("http://127.0.0.1:8000/macro/api/?format=json", function(data) {
+        for(var i = 0; i < data.results.length; i++){
+          dataPoints.push({x: new Date(data.results[i].date_time), y: Number(data.results[i].{{choice|default:'kospi'}})});
+        }
+        stockChart.render();
+      });
+    }
+    </script>
+</head>
+
+
+
+<body class="bg-success bg-opacity-10">
+    <div class="row wider justify-content-around">
+        <div class="col col-12">  
+            {% comment %} <div class="col col-6 app-content"> {% endcomment %}
+                <div class="col-lg-12 bg-success bg-opacity-5">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between">
+                            <span> 
+                                <h4 class="text-success" style="font-family: 'KyoboHand';"> 거시지표 </h4>
+                            </span>
+                            <span>
+                                <form method="GET" action="">
+                                    {% comment %} <div class="col-4"> {% endcomment %}
+                                      <select name="choice" id="choice">
+                                        <option value="kospi" id="kospi"> 코스피 </option>
+                                        <option value="america_top_500" id="america_top_500"> 미국 상위 500 주식 </option>
+                                        <option value="gold" id="gold"> 금 </option>
+                                        <option value="copper" id="copper"> 구리 </option>
+                                        <option value="k_gov3" id="k_gov3"> 3년 한국채 수익률 </option>
+                                        <option value="usd_k" id="usd_k"> 환율 </option>
+                                      </select>
+                                      <button class="btn btn-primary" style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .75rem; --bs-btn-font-size: 1rem;" type="submit" value=""> 보기 </button>
+                                    {% comment %} </div> {% endcomment %}
+                                </form>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div style="font-family: 'SDSamliphopangche_Outline'; font-size: 2rem; text-align: center;">" {{title|default:'KOSPI'}} "</div>
+                            <div id="stockChartContainer" style="height: 450px; max-width: 1200px; margin: 0px auto;"></div>
+                            <table class="table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope='col'> 날짜 </th>
+                                        <th scope='col'> 코스피 </th>
+                                        <th scope='col'> 미국 상위 500 주식 </th>
+                                        <th scope='col'> 금 </th>
+                                        <th scope='col'> 구리 </th>
+                                        <th scope='col'> 3년 한국채 수익률 </th>
+                                        <th scope='col'> 환율 </th>
+                                    </tr>
+                                </thead>
+                                <tbody> 
+                                    {% for macro in macro_list %}
+                                        <tr>
+                                            <td> {{macro.date_time}} </td>
+                                            <td> {{macro.kospi}} </td>
+                                            <td> {{macro.america_top_500}} </td>
+                                            <td> {{macro.gold}} </td>
+                                            <td> {{macro.copper}} </td>
+                                            <td> {{macro.k_gov3}} </td>
+                                            <td> {{macro.usd_k}} </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% comment %} </div> {% endcomment %}
+        </div>
+    </div>
+</body>
+
+
+{% endblock %}
+
+{% include 'footer.html' %}

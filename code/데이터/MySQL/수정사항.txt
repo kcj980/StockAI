@@ -1,0 +1,22 @@
+12/27수정사항
+ModelResult테이블
+xgb_short_result
+xgb_long_result
+lstm_short_result
+lstm_long_result
+칼럼 생성
+
+StockCode테이블 
+xgb_short_pred
+xgb_long_pred
+ltms_short_pred
+ltms_long_pred
+칼럼 생성
+
+12/28수정사항
+AIRate테이블 생성
+임시데이터 저장
+
+12/29수정사항
+새로운데이블 AIFunds, Dictionary, Message, Comment 생성
+12/28일까지 데이터 DB에 모두 저장
