@@ -34,7 +34,7 @@ AI포트폴리오를 참고하여 투자 가능
 |분야|개발 환경|
 |---|---|
 |Front|![123](https://user-images.githubusercontent.com/97291618/215203295-1948ca59-4ef2-47ba-b77f-11edf73ab0be.jpg)|
-
-
-
+|Backend|![image](https://user-images.githubusercontent.com/97291618/215204451-0bba626b-7d38-4a3c-be6f-0ba14fa9dc57.png)|
+|Data Pipeline & AI|![image](https://user-images.githubusercontent.com/97291618/215204570-4f256419-e402-4750-b0d9-43728bc95329.png)|
+|Cloud Server|![image](https://user-images.githubusercontent.com/97291618/215204630-78d0d97f-e878-44e6-a482-fe404d977745.png)|
 
