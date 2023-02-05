@@ -45,7 +45,7 @@
 
 - Server - AWS를 사용해 서비스 배포
 
-## 웹 페이지 이미지
+## 웹 화면
 ![image](https://user-images.githubusercontent.com/97291618/216814445-8be3cc2e-c8c6-4339-b8cb-1534f998e93e.png)
 ![image](https://user-images.githubusercontent.com/97291618/216814459-6cb18aed-bc54-4d9e-a72b-70814ca29f78.png)
 ![image](https://user-images.githubusercontent.com/97291618/216814496-883dfbc3-ae3a-4c34-816f-21e715e3db00.png)
